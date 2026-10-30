@@ -1,1 +1,563 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Work Hour Tracker Work Log Support</title><style>body{font:18px/1.7 system-ui,-apple-system,sans-serif;max-width:760px;margin:40px auto;padding:0 20px;color:#1d2528}h1{line-height:1.2}a{color:#0b6b74}</style><style>#contact{display:grid;gap:8px;font-size:15px;max-width:460px}#contact select,#contact input,#contact textarea,#contact button{font:inherit;padding:6px 8px}#contact button{justify-self:start}.small{font-size:15px;color:#4a5558}</style><h1>Work Hour Tracker Work Log Support</h1><p>For questions or help, write to <a href="mailto:deg.leon.2024@gmail.com">deg.leon.2024@gmail.com</a>. Please include the app version, device and a description of the issue, and avoid sending sensitive personal information.</p><h2>Documents</h2><ul><li><a href="privacy.html">Privacy Policy</a> — <a href="privacy.html" lang="en">English</a> · <a href="privacy.es.html" lang="es">Español</a> · <a href="privacy.ja.html" lang="ja">日本語</a> · <a href="privacy.de.html" lang="de">Deutsch</a> · <a href="privacy.ko.html" lang="ko">한국어</a></li><li><a href="terms.html">Terms of Use</a> — <a href="terms.html" lang="en">English</a> · <a href="terms.es.html" lang="es">Español</a> · <a href="terms.ja.html" lang="ja">日本語</a> · <a href="terms.de.html" lang="de">Deutsch</a> · <a href="terms.ko.html" lang="ko">한국어</a></li><li><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">License (EULA)</a> (Apple Standard EULA)</li></ul><p class="small">Effective 2026-10-27. Developer: Daniel Esteban Gonzalez, Argentina.</p><hr><h2 style="font-size:18px">Quick message</h2><p class="small">Opens your own mail app, addressed to us. Nothing is sent or stored by this page.</p><form id="contact" onsubmit="event.preventDefault();var t=document.getElementById('topic').value,m=document.getElementById('msg').value,v=document.getElementById('ver').value;location.href='mailto:deg.leon.2024@gmail.com?subject='+encodeURIComponent('Work Hour Tracker Work Log — '+t)+'&body='+encodeURIComponent(m+(v?'\n\n—\n'+v:''));"><select id="topic"><option>Question</option><option>Problem</option><option>Suggestion</option></select> <input id="ver" placeholder="App / iOS version (optional)"><textarea id="msg" rows="3" required placeholder="Your message"></textarea><button type="submit">Open in my mail app</button></form></html>
+<!doctype html>
+<html lang="en" data-landing="work-hour-tracker">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Work Hour Tracker Work Log: Siri, Apple Intelligence and a live shift timer</title>
+<meta name="description" content="A private work log built around Siri, Apple Intelligence and Live Activities. Clock in by voice, watch your shift live on the Lock Screen and get your week written for you. $5 once, no subscription.">
+<meta name="theme-color" content="#0b2e33">
+<meta property="og:title" content="Work Hour Tracker Work Log">
+<meta property="og:description" content="Clock in with Siri, watch your shift live and let Apple Intelligence write your week. Private. No subscription.">
+<meta property="og:image" content="https://degleon.github.io/app-support/work-hour-tracker-work-log/assets/poster-1.webp">
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b2e33; --ink-2:#072226; --ink-3:#123c42; --frost:#eaf6f2; --mint:#bfebdd; --mint-2:#8fd9c3;
+  --coral:#ff5a47; --coral-2:#ff7a63; --muted:#a9c9c1; --line:rgba(191,235,221,.16);
+  --glass:rgba(234,246,242,.07); --glass-2:rgba(234,246,242,.12);
+  --radius:28px; --max:1180px;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ink-2);color:var(--frost);font:17px/1.6 Inter,system-ui,-apple-system,sans-serif;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:var(--mint)}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+.display{font-family:Anton,"SF Pro Display",Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:.95}
+.accent{color:var(--coral)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mint-2)}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:620px}
+
+/* ---------- nav ---------- */
+nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(7,34,38,.72);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-color:var(--line)}
+nav .wrap{display:flex;align-items:center;gap:14px;height:68px}
+nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--frost);text-decoration:none}
+nav .brand img{width:34px;height:34px;border-radius:9px}
+nav .links{margin-left:auto;display:flex;gap:22px;align-items:center}
+nav .links a{color:var(--muted);text-decoration:none;font-size:15px;font-weight:500}
+nav .links a:hover{color:var(--frost)}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:14px 24px;font:600 16px/1 Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer;transition:transform .35s var(--spring),box-shadow .3s,background .3s}
+.btn-coral{background:var(--coral);color:#1b0b08;box-shadow:0 10px 30px -10px rgba(255,90,71,.7),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-coral:hover{transform:translateY(-2px) scale(1.03);background:var(--coral-2)}
+.btn-glass{background:var(--glass-2);color:var(--frost);border:1px solid var(--line)}
+.btn-glass:hover{transform:translateY(-2px)}
+nav .btn{padding:10px 18px;font-size:14px}
+@media (max-width:760px){nav .links a:not(.btn){display:none}}
+nav .brand,nav .btn{white-space:nowrap}
+@media (max-width:420px){nav .brand{font-size:15px}nav .brand img{width:30px;height:30px}nav .wrap{gap:8px}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:120px 0 80px;overflow:hidden;isolation:isolate}
+.hero .bg{position:absolute;inset:-8%;z-index:-2;background:url(assets/bg-hero.webp) center/cover;filter:saturate(1.1) brightness(.55);animation:drift 28s ease-in-out infinite alternate}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(1000px 600px at 75% 40%,transparent,rgba(7,34,38,.6) 60%,var(--ink-2)),linear-gradient(180deg,rgba(7,34,38,.2),var(--ink-2) 96%)}
+@keyframes drift{from{transform:scale(1.05) translate3d(-1.5%,-1%,0)}to{transform:scale(1.12) translate3d(1.5%,1.5%,0)}}
+.hero .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(64px,10vw,150px)}
+.hero .app-id{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.hero .app-id img{width:64px;height:64px;border-radius:16px;box-shadow:0 12px 30px -8px rgba(0,0,0,.6)}
+.hero .app-id b{display:block;font-size:17px}
+.hero .app-id span{font-size:14px;color:var(--muted)}
+.hero .lead{margin:24px 0 32px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.hero .price{font-size:14px;color:var(--muted);margin-top:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--line);font-size:14px;font-weight:500;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.chip svg{width:16px;height:16px}
+.stage{position:relative;height:640px}
+.phone{position:absolute;width:290px;border-radius:46px;padding:10px;background:linear-gradient(145deg,#2a5a5f,#0d2a2e 60%,#1b4a4f);box-shadow:0 50px 90px -30px rgba(0,0,0,.8),inset 0 0 0 1.5px rgba(191,235,221,.25)}
+.phone img{border-radius:37px;width:100%}
+.phone.main{left:50%;top:10px;transform:translateX(-50%) rotate(-4deg);animation:float 7s ease-in-out infinite}
+.phone.back{left:4%;top:90px;width:240px;transform:rotate(-14deg);opacity:.75;filter:blur(.4px) brightness(.8);animation:float 9s ease-in-out -3s infinite}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -14px}}
+.island{position:absolute;right:-4px;top:40px;z-index:3;display:flex;align-items:center;gap:12px;padding:10px 16px 10px 10px;border-radius:999px;background:#000;color:#fff;box-shadow:0 20px 40px -10px rgba(0,0,0,.7);font:600 15px Inter,system-ui;animation:pop 1s var(--spring) .9s both}
+.island .dot{width:30px;height:30px;border-radius:50%;background:var(--coral);display:grid;place-items:center}
+.island .dot svg{width:16px;height:16px}
+.island .t{font-variant-numeric:tabular-nums;color:var(--coral-2);font-size:17px}
+.island small{display:block;font-size:11px;color:#9aa;font-weight:500;line-height:1}
+.bubble{position:absolute;left:-10px;bottom:70px;z-index:3;max-width:240px;padding:14px 16px;border-radius:20px 20px 20px 6px;background:rgba(234,246,242,.14);border:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-size:15px;animation:pop 1s var(--spring) 1.3s both}
+.bubble b{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mint-2);margin-bottom:4px}
+@keyframes pop{from{opacity:0;transform:scale(.6) translateY(20px)}to{opacity:1;transform:none}}
+@media (max-width:900px){.hero .grid{grid-template-columns:1fr}.stage{height:560px;max-width:420px;margin:0 auto;width:100%}.island{right:0}.bubble{left:0}}
+@media (max-width:420px){.phone{width:240px}.phone.back{display:none}.stage{height:500px}}
+
+/* ---------- marquee ---------- */
+.ticker{border-block:1px solid var(--line);background:var(--ink);overflow:hidden;padding:18px 0}
+.ticker .row{display:flex;gap:48px;width:max-content;animation:marquee 40s linear infinite}
+.ticker span{font-family:Anton,sans-serif;text-transform:uppercase;font-size:26px;color:var(--mint);white-space:nowrap;display:flex;align-items:center;gap:48px}
+.ticker span::after{content:"✦";color:var(--coral);font-size:18px}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- sections ---------- */
+section{position:relative;padding:120px 0}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.split.rev .copy{order:2}
+@media (max-width:900px){.split{grid-template-columns:1fr;gap:44px}.split.rev .copy{order:0}section{padding:84px 0}}
+h2.display{font-size:clamp(48px,6.5vw,96px);margin:14px 0 22px}
+.list{list-style:none;padding:0;display:grid;gap:14px;margin-top:28px}
+.list li{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:20px;background:var(--glass);border:1px solid var(--line)}
+.list li svg{flex:none;width:24px;height:24px;color:var(--coral);margin-top:2px}
+.list li b{display:block}
+.list li span{color:var(--muted);font-size:15px}
+.card{position:relative;border-radius:var(--radius);background:linear-gradient(160deg,rgba(18,60,66,.9),rgba(7,34,38,.9));border:1px solid var(--line);box-shadow:0 40px 80px -40px rgba(0,0,0,.8);overflow:hidden}
+.glow{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(90px);opacity:.35;z-index:-1;pointer-events:none}
+
+/* Siri */
+.siri-stage{position:relative;padding:34px;min-height:520px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;background:url(assets/bg-ledger.webp) center/cover}
+.siri-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,34,38,.25),rgba(7,34,38,.9))}
+.siri-stage>*{position:relative}
+.orb{width:84px;height:84px;border-radius:50%;margin:0 auto 6px;background:conic-gradient(from 0deg,var(--coral),#ffb36b,var(--mint),#56c4ff,#b06bff,var(--coral));filter:blur(.5px);animation:spin 6s linear infinite, breathe 2.4s ease-in-out infinite;box-shadow:0 0 60px rgba(255,90,71,.45)}
+@keyframes spin{to{rotate:360deg}}
+@keyframes breathe{50%{scale:1.12}}
+.msg{max-width:85%;padding:14px 18px;border-radius:22px;font-size:16px;opacity:0;transform:translateY(16px) scale(.96);transition:opacity .5s,transform .7s var(--spring)}
+.msg.show{opacity:1;transform:none}
+.msg.you{align-self:flex-end;background:var(--coral);color:#1b0b08;font-weight:600;border-bottom-right-radius:6px}
+.msg.app{align-self:flex-start;background:rgba(234,246,242,.14);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-left-radius:6px}
+.msg.app b{color:var(--mint)}
+
+/* AI */
+.ai{background:radial-gradient(900px 500px at 15% 20%,rgba(191,235,221,.12),transparent),var(--ink)}
+.ai-card{padding:30px}
+.ai-card .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;background:rgba(191,235,221,.12);border:1px solid var(--line)}
+.badge i{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#ff7a63,#b06bff,#56c4ff);box-shadow:0 0 10px #b06bff}
+.typed{font-size:clamp(19px,2vw,23px);line-height:1.55;min-height:7.5em}
+.typed .caret{display:inline-block;width:2px;height:1.1em;background:var(--coral);vertical-align:-3px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ai-card small{display:block;margin-top:16px;color:var(--muted);font-size:13px}
+.parse{margin-top:22px;padding:18px;border-radius:20px;background:rgba(7,34,38,.6);border:1px dashed rgba(191,235,221,.3)}
+.parse .in{font-size:15px;color:var(--muted)}
+.parse .in q{color:var(--frost);font-style:italic}
+.parse .out{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.parse .out span{padding:7px 12px;border-radius:12px;background:var(--glass-2);font-size:14px;font-weight:600;opacity:0;transform:scale(.7);transition:opacity .4s,transform .6s var(--spring)}
+.parse.on .out span{opacity:1;transform:none}
+.parse.on .out span:nth-child(2){transition-delay:.15s}.parse.on .out span:nth-child(3){transition-delay:.3s}.parse.on .out span:nth-child(4){transition-delay:.45s}
+.shot{position:relative;max-width:330px;margin:0 auto}
+.shot .phone{position:relative;width:100%;animation:float 8s ease-in-out infinite}
+
+/* Live */
+.live{overflow:hidden}
+.lock{position:relative;max-width:380px;margin:0 auto;aspect-ratio:9/19.5;border-radius:54px;padding:12px;background:linear-gradient(145deg,#2a5a5f,#0d2a2e 60%,#1b4a4f);box-shadow:0 60px 100px -40px rgba(0,0,0,.85),inset 0 0 0 1.5px rgba(191,235,221,.25)}
+.lock .screen{position:relative;height:100%;border-radius:44px;overflow:hidden;background:url(assets/bg-reports.webp) center/cover;display:flex;flex-direction:column;align-items:center;padding:20px 16px}
+.lock .screen::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.45))}
+.lock .screen>*{position:relative}
+.lock .di{display:flex;align-items:center;gap:10px;height:40px;padding:0 14px 0 6px;border-radius:999px;background:#000;color:#fff;font:600 14px Inter;animation:widen 4s var(--spring) infinite}
+.lock .di .dot{width:28px;height:28px;border-radius:50%;background:var(--coral);display:grid;place-items:center}
+.lock .di .dot svg{width:14px;height:14px}
+.lock .di .t{color:var(--coral-2);font-variant-numeric:tabular-nums}
+@keyframes widen{0%,100%{width:180px}50%{width:196px}}
+.lock .clock{margin-top:30px;font:700 84px/1 Inter;letter-spacing:-.04em;color:#fff;text-shadow:0 4px 30px rgba(0,0,0,.4)}
+.lock .date{color:rgba(255,255,255,.85);font-weight:600;margin-top:4px}
+.lock .la{margin-top:auto;width:100%;padding:16px 18px;border-radius:26px;background:rgba(20,30,32,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff}
+.lock .la .row{display:flex;align-items:center;justify-content:space-between}
+.lock .la .name{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+.lock .la .name img{width:28px;height:28px;border-radius:7px}
+.lock .la .big{font:400 44px/1 Anton,sans-serif;color:var(--coral-2);font-variant-numeric:tabular-nums;margin-top:10px}
+.lock .la .bar{height:8px;border-radius:9px;background:rgba(255,255,255,.15);margin-top:12px;overflow:hidden}
+.lock .la .bar i{display:block;height:100%;width:62%;border-radius:9px;background:linear-gradient(90deg,var(--mint),var(--coral));animation:grow 6s ease-in-out infinite}
+@keyframes grow{0%{width:58%}100%{width:70%}}
+.lock .la small{display:block;margin-top:8px;color:#b9c9c6;font-size:12px}
+@media (max-width:560px){.lock{max-width:290px}.lock .clock{font-size:64px}.lock .la .big{font-size:36px}}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
+
+/* features */
+.features{background:linear-gradient(180deg,var(--ink-2),var(--ink))}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+@media (max-width:900px){.fgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}}
+.f{padding:26px;border-radius:24px;background:var(--glass);border:1px solid var(--line);transition:transform .5s var(--spring),background .3s,border-color .3s}
+.f:hover{transform:translateY(-6px) rotate(-.4deg);background:var(--glass-2);border-color:rgba(255,90,71,.4)}
+.f .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,90,71,.25),rgba(255,90,71,.08));color:var(--coral);margin-bottom:16px}
+.f .ic svg{width:24px;height:24px}
+.f h3{font-size:19px;margin-bottom:6px}
+.f p{color:var(--muted);font-size:15px}
+
+/* gallery */
+.gallery{overflow:hidden;padding-bottom:100px}
+.reel{display:flex;gap:22px;width:max-content;animation:marquee 60s linear infinite;padding:20px 0}
+.reel:hover{animation-play-state:paused}
+.reel img{height:520px;width:auto;border-radius:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);transition:transform .5s var(--spring)}
+.reel img:hover{transform:translateY(-10px) scale(1.02)}
+@media (max-width:560px){.reel img{height:400px}}
+.devices{display:grid;grid-template-columns:.8fr 1.2fr;gap:22px;margin-top:40px}
+.devices img{border-radius:22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);width:100%;height:100%;object-fit:cover}
+.devices figure{position:relative}
+.devices figcaption{position:absolute;left:14px;bottom:14px;padding:6px 12px;border-radius:999px;background:rgba(7,34,38,.75);font-size:13px;font-weight:600;backdrop-filter:blur(10px)}
+@media (max-width:760px){.devices{grid-template-columns:1fr}}
+
+/* privacy + price */
+.privacy{text-align:center}
+.privacy .icons{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:40px}
+.privacy .icons div{width:170px;padding:22px 16px;border-radius:24px;background:var(--glass);border:1px solid var(--line)}
+.privacy .icons svg{width:30px;height:30px;color:var(--mint);margin-bottom:10px}
+.privacy .icons b{display:block;font-size:15px}
+.privacy .icons span{font-size:13px;color:var(--muted)}
+.price-card{max-width:760px;margin:0 auto;padding:54px 40px;text-align:center;background:radial-gradient(600px 300px at 50% 0%,rgba(255,90,71,.25),transparent),linear-gradient(160deg,var(--ink-3),var(--ink-2))}
+.price-card .amount{font-family:Anton,sans-serif;font-size:clamp(90px,14vw,150px);line-height:1;color:var(--frost)}
+.price-card .amount sup{font-size:.4em;vertical-align:.9em;color:var(--coral)}
+.price-card ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:24px 0 32px;color:var(--muted);font-size:15px}
+.price-card ul li::before{content:"✓ ";color:var(--coral);font-weight:700}
+.langs{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
+.langs span{padding:8px 16px;border-radius:999px;border:1px solid var(--line);font-weight:600}
+
+/* faq */
+details{border-bottom:1px solid var(--line);padding:20px 0}
+summary{cursor:pointer;font-size:18px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--coral);font-size:24px;line-height:1;transition:transform .4s var(--spring)}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);margin-top:10px;max-width:760px}
+
+/* support */
+.support{background:var(--ink)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+@media (max-width:900px){.sgrid{grid-template-columns:1fr}}
+.panel{padding:30px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--line)}
+.panel h3{font-size:20px;margin-bottom:12px}
+.doc{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.doc:last-of-type{border:0}
+.doc b{min-width:140px}
+.doc a{font-size:14px;text-decoration:none;padding:4px 10px;border-radius:999px;background:rgba(191,235,221,.08)}
+.doc a:hover{background:rgba(191,235,221,.18)}
+form{display:grid;gap:12px}
+label{font-size:13px;font-weight:600;color:var(--muted)}
+select,input,textarea{width:100%;font:16px Inter,system-ui;color:var(--frost);background:rgba(7,34,38,.7);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+select:focus,input:focus,textarea:focus{outline:2px solid var(--coral);outline-offset:1px}
+.small{font-size:13px;color:var(--muted)}
+footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+footer a{color:var(--muted)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(40px) scale(.97);transition:opacity .8s ease,transform 1s var(--spring)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.msg,.parse .out span{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Zm-7 9a7 7 0 0 0 14 0M12 19v3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7L12 2Zm7 13 1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1 1-2.6Z"/></symbol>
+  <symbol id="i-live" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M3 7h18v10H3zM12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM6 10v4M18 10v4"/></symbol>
+  <symbol id="i-jobs" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 8h16v11H4zM9 8V5h6v3M4 13h16"/></symbol>
+  <symbol id="i-export" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 20V12M10 20V6M15 20v-9M20 20V4"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Zm0 0v18M4 7.5l8 4.5 8-4.5"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></symbol>
+  <symbol id="i-noeye" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M3 3l18 18M10.6 6.2A9.8 9.8 0 0 1 12 6c5 0 9 6 9 6a17 17 0 0 1-2.6 3.2M6.2 7.6C4.1 9.2 3 12 3 12s4 6 9 6a8.6 8.6 0 0 0 3.4-.7"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0M3 3l18 18"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M7 2h10v20H7zM11 18h2"/></symbol>
+  <symbol id="i-ad" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M3 5h18v14H3zM3 3l18 18"/></symbol>
+</svg>
+
+<nav id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/icon.png" alt="">Work Hour Tracker</a>
+    <div class="links">
+      <a href="#siri">Siri</a><a href="#ai">Apple Intelligence</a><a href="#live">Live</a><a href="#features">Features</a><a href="#support">Support</a>
+      <a class="btn btn-coral" href="https://apps.apple.com/app/id6749599600">Get the app</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="bg" aria-hidden="true"></div>
+  <div class="wrap grid">
+    <div>
+      <div class="app-id reveal"><img src="assets/icon.png" alt="Work Hour Tracker app icon" width="64" height="64"><div><b>Work Hour Tracker Work Log</b><span>For iPhone, iPad and iPhone Duo</span></div></div>
+      <h1 class="display reveal">Make time<br><span class="accent">count.</span></h1>
+      <p class="lead reveal">A work log built around <b>Siri</b>, <b>Apple Intelligence</b> and <b>Live Activities</b>. Clock in by voice, watch your shift live on the Lock Screen and get your week written for you.</p>
+      <div class="ctas reveal">
+        <a class="btn btn-coral" href="https://apps.apple.com/app/id6749599600"><svg width="18" height="18"><use href="#i-play"/></svg>Get it on the App Store</a>
+        <a class="btn btn-glass" href="#siri">See how it works</a>
+      </div>
+      <p class="price reveal">$5 once. No subscription, no account, no ads.</p>
+      <div class="chips reveal">
+        <span class="chip"><svg><use href="#i-mic"/></svg>Siri &amp; Shortcuts</span>
+        <span class="chip"><svg><use href="#i-spark"/></svg>Apple Intelligence</span>
+        <span class="chip"><svg><use href="#i-live"/></svg>Live Activity</span>
+        <span class="chip"><svg><use href="#i-lock"/></svg>Stays on your iPhone</span>
+      </div>
+    </div>
+    <div class="stage reveal" aria-hidden="true">
+      <div class="phone back"><img src="assets/ui-reports-summary.webp" alt="" loading="lazy"></div>
+      <div class="phone main"><img src="assets/ui-today-running.webp" alt=""></div>
+      <div class="island"><span class="dot"><svg><use href="#i-play"/></svg></span><span><small>On shift</small><span class="t" data-timer="13342">3:42:22</span></span></div>
+      <div class="bubble"><b>Siri</b>“Clock in with Work Hour Tracker”</div>
+    </div>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true"><div class="row">
+  <span>Clock in by voice</span><span>Your week in words</span><span>Live on the Lock Screen</span><span>Overtime flagged</span><span>CSV · PDF · Text</span><span>Five languages</span><span>Private by design</span>
+  <span>Clock in by voice</span><span>Your week in words</span><span>Live on the Lock Screen</span><span>Overtime flagged</span><span>CSV · PDF · Text</span><span>Five languages</span><span>Private by design</span>
+</div></div>
+
+<section id="siri">
+  <div class="glow" style="background:var(--coral);left:-200px;top:80px"></div>
+  <div class="wrap split">
+    <div class="copy">
+      <p class="eyebrow reveal">Siri &amp; Shortcuts</p>
+      <h2 class="display reveal">Just ask <span class="accent">Siri.</span></h2>
+      <p class="lead reveal">Clock in on the way in, clock out on the way out — without opening the app. Every action also works from Shortcuts and Spotlight.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-mic"/></svg><div><b>“Clock in with Work Hour Tracker”</b><span>Starts your shift timer, even with the app closed.</span></div></li>
+        <li class="reveal"><svg><use href="#i-chart"/></svg><div><b>“How many hours this week?”</b><span>Hears your total, with overtime when there is some.</span></div></li>
+        <li class="reveal"><svg><use href="#i-spark"/></svg><div><b>“Summarize my week”</b><span>Siri reads the summary Apple Intelligence writes for you.</span></div></li>
+        <li class="reveal"><svg><use href="#i-export"/></svg><div><b>“Export my hours”</b><span>Gets your log ready to share.</span></div></li>
+      </ul>
+    </div>
+    <div class="card siri-stage reveal" id="siriChat" aria-label="Example conversation with Siri">
+      <div class="orb"></div>
+      <div class="msg you">Clock in with Work Hour Tracker</div>
+      <div class="msg app">You're on the clock at <b>Sample Design Studio</b>. Have a good shift.</div>
+      <div class="msg you">How many hours this week?</div>
+      <div class="msg app">You've worked <b>33 h 30 min</b> this week. No overtime yet.</div>
+    </div>
+  </div>
+</section>
+
+<section class="ai" id="ai">
+  <div class="wrap split rev">
+    <div class="copy">
+      <p class="eyebrow reveal">Apple Intelligence, built in</p>
+      <h2 class="display reveal">Your week<br><span class="accent">in words.</span></h2>
+      <p class="lead reveal">Apple Intelligence turns your hours into a short, natural summary, reads shifts from a sentence and takes a second look before you export. It runs on your device or with Private Cloud Compute.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-spark"/></svg><div><b>Week summaries</b><span>Hours, busiest day, overtime and estimated earnings, in plain words.</span></div></li>
+        <li class="reveal"><svg><use href="#i-cal"/></svg><div><b>Type it instead of tapping</b><span>Write a sentence and get a shift ready to check and save.</span></div></li>
+        <li class="reveal"><svg><use href="#i-export"/></svg><div><b>A second look before you export</b><span>It points out shifts worth reviewing.</span></div></li>
+      </ul>
+      <p class="small reveal" style="margin-top:18px">Without Apple Intelligence every feature still works with the built-in calculation, and the app always shows which one wrote the text.</p>
+    </div>
+    <div class="reveal">
+      <div class="card ai-card">
+        <div class="head"><span class="eyebrow">Your week in words</span><span class="badge"><i></i>Apple Intelligence</span></div>
+        <p class="typed" id="typed" data-text="You worked 46 hours and 30 minutes across 6 days. Your busiest day was Wednesday, at 9 hours 15 minutes. That's 6 h 30 min of overtime, and estimated earnings of $1,663.42."></p>
+        <small>Example summary written from the sample data in the screenshots.</small>
+        <div class="parse" id="parse">
+          <div class="in">You type: <q>yesterday 9 to 5 at the café, 30 min lunch</q></div>
+          <div class="out"><span>📅 Yesterday</span><span>🕘 9:00 AM → 5:00 PM</span><span>☕ Break 30 min</span><span>✓ Ready to check</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="live" id="live">
+  <div class="glow" style="background:var(--mint);right:-220px;top:120px;opacity:.18"></div>
+  <div class="wrap split">
+    <div class="copy">
+      <p class="eyebrow reveal">Live Activity &amp; widgets</p>
+      <h2 class="display reveal">Your shift,<br><span class="accent">live.</span></h2>
+      <p class="lead reveal">Start a shift and the timer follows you to the Lock Screen and the Dynamic Island. Close the app mid-shift — the clock keeps running. Widgets show your hours on the Home Screen and the Lock Screen.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-live"/></svg><div><b>Lock Screen and Dynamic Island</b><span>See how long you've been on shift at a glance.</span></div></li>
+        <li class="reveal"><svg><use href="#i-phone"/></svg><div><b>Home Screen widgets</b><span>Your hours at a glance, without opening the app.</span></div></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="lock" aria-hidden="true">
+        <div class="screen">
+          <div class="di"><span class="dot"><svg><use href="#i-play"/></svg></span><span>On shift</span><span class="t" data-timer="13342" style="margin-left:auto">3:42:22</span></div>
+          <div class="clock" id="lockClock">9:41</div>
+          <div class="date" id="lockDate">Friday, October 30</div>
+          <div class="la">
+            <div class="row"><span class="name"><img src="assets/icon.png" alt="">Work Hour Tracker</span><span style="font-size:13px;color:#b9c9c6">Sample Design Studio</span></div>
+            <div class="big" data-timer="13342">3:42:22</div>
+            <div class="bar"><i></i></div>
+            <small>Started 8:02 AM · Tap to end shift</small>
+          </div>
+        </div>
+      </div>
+      <p class="note">Illustration of the Live Activity.</p>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <p class="eyebrow reveal">Everything you need</p>
+    <h2 class="display reveal">Built for people<br>paid by the <span class="accent">hour.</span></h2>
+    <div class="fgrid">
+      <div class="f reveal"><div class="ic"><svg><use href="#i-play"/></svg></div><h3>One-tap clock in</h3><p>A big key to start and end your shift, with breaks and notes.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-cal"/></svg></div><h3>Pay-period totals</h3><p>Weekly, biweekly, semi-monthly or monthly, starting the day you choose.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-cash"/></svg></div><h3>Earnings &amp; overtime</h3><p>Your rate, estimated pay and overtime after the threshold you set.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-jobs"/></svg></div><h3>More than one job</h3><p>Each job with its own rate and color.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-export"/></svg></div><h3>CSV, PDF &amp; text</h3><p>Export a clean log with an overtime summary and share it anywhere.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-cube"/></svg></div><h3>Explore your time</h3><p>Your week in 3D, a shift lab and short guides.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" aria-label="App Store screenshots">
+  <div class="wrap">
+    <p class="eyebrow reveal">Take a look</p>
+    <h2 class="display reveal">On every <span class="accent">screen.</span></h2>
+  </div>
+  <div class="reel">
+    <img src="assets/poster-1.webp" alt="Make time count: one-tap clock in" loading="lazy"><img src="assets/poster-2.webp" alt="Just ask Siri" loading="lazy"><img src="assets/poster-3.webp" alt="Your week in words" loading="lazy"><img src="assets/poster-4.webp" alt="Every shift, every detail" loading="lazy"><img src="assets/poster-5.webp" alt="Hours ready to go: export" loading="lazy"><img src="assets/poster-6.webp" alt="Your work, your way: jobs" loading="lazy">
+    <img src="assets/poster-1.webp" alt="" loading="lazy"><img src="assets/poster-2.webp" alt="" loading="lazy"><img src="assets/poster-3.webp" alt="" loading="lazy"><img src="assets/poster-4.webp" alt="" loading="lazy"><img src="assets/poster-5.webp" alt="" loading="lazy"><img src="assets/poster-6.webp" alt="" loading="lazy">
+  </div>
+  <div class="wrap devices">
+    <figure class="reveal"><img src="assets/poster-ipad.webp" alt="Work Hour Tracker on iPad" loading="lazy"><figcaption>iPad</figcaption></figure>
+    <figure class="reveal"><img src="assets/poster-duo.webp" alt="Work Hour Tracker on the iPhone Duo inner screen" loading="lazy"><figcaption>iPhone Duo</figcaption></figure>
+  </div>
+</section>
+
+<section class="privacy">
+  <div class="wrap">
+    <p class="eyebrow reveal">Private by design</p>
+    <h2 class="display reveal">Your hours stay <span class="accent">yours.</span></h2>
+    <p class="lead reveal" style="margin:0 auto">Your records live on your device. No sign-up, no analytics, no ads, no tracking. Optional Apple Intelligence requests may be processed by Apple to answer them.</p>
+    <div class="icons">
+      <div class="reveal"><svg><use href="#i-user"/></svg><b>No account</b><span>Open it and start</span></div>
+      <div class="reveal"><svg><use href="#i-phone"/></svg><b>On your device</b><span>Works offline</span></div>
+      <div class="reveal"><svg><use href="#i-noeye"/></svg><b>No tracking</b><span>No analytics</span></div>
+      <div class="reveal"><svg><use href="#i-ad"/></svg><b>No ads</b><span>Ever</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="card price-card reveal">
+      <p class="eyebrow">One price. Yours to keep.</p>
+      <div class="amount"><sup>$</sup>5</div>
+      <ul><li>Every feature</li><li>No subscription</li><li>No in-app purchases</li><li>iPhone, iPad &amp; iPhone Duo</li></ul>
+      <a class="btn btn-coral" href="https://apps.apple.com/app/id6749599600"><svg width="18" height="18"><use href="#i-play"/></svg>Get it on the App Store</a>
+      <div class="langs"><span>English</span><span>Español</span><span>日本語</span><span>Deutsch</span><span>한국어</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <p class="eyebrow reveal">Questions</p>
+    <h2 class="display reveal">Good to <span class="accent">know.</span></h2>
+    <div class="reveal">
+      <details><summary>Do I need Apple Intelligence?</summary><p>No. Summaries, reading a shift from a sentence and the export check use Apple Intelligence when your iPhone has it. Without it, the app shows the built-in calculated version, so everything keeps working.</p></details>
+      <details><summary>Which Siri phrases can I use?</summary><p>“Clock in with Work Hour Tracker”, “Clock out with Work Hour Tracker”, “How many hours this week?”, “Summarize my week” and “Export my hours”. You'll also find them in the Shortcuts app and Spotlight.</p></details>
+      <details><summary>Where is my data stored?</summary><p>On your device. There is no account and no server. You can export your log as CSV, PDF or plain text whenever you want.</p></details>
+      <details><summary>Does it calculate my real paycheck?</summary><p>It estimates earnings and overtime from the rates and threshold you set. It is a personal record-keeping tool, not legal, payroll or tax advice.</p></details>
+      <details><summary>Is it a subscription?</summary><p>No. You pay once and get every feature, with no in-app purchases.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <div class="wrap">
+    <p class="eyebrow reveal">Support</p>
+    <h2 class="display reveal">We're here to <span class="accent">help.</span></h2>
+    <p class="lead reveal">Questions, problems or ideas: write to <a href="mailto:deg.leon.2024@gmail.com">deg.leon.2024@gmail.com</a>. Please include the app version and your device, and avoid sending sensitive personal information.</p>
+    <div class="sgrid">
+      <div class="panel reveal">
+        <h3>Documents</h3>
+        <div class="doc"><b>Privacy Policy</b><a href="privacy.html" lang="en">English</a><a href="privacy.es.html" lang="es">Español</a><a href="privacy.ja.html" lang="ja">日本語</a><a href="privacy.de.html" lang="de">Deutsch</a><a href="privacy.ko.html" lang="ko">한국어</a></div>
+        <div class="doc"><b>Terms of Use</b><a href="terms.html" lang="en">English</a><a href="terms.es.html" lang="es">Español</a><a href="terms.ja.html" lang="ja">日本語</a><a href="terms.de.html" lang="de">Deutsch</a><a href="terms.ko.html" lang="ko">한국어</a></div>
+        <div class="doc"><b>License (EULA)</b><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Apple Standard EULA</a></div>
+        <p class="small" style="margin-top:14px">Effective 2026-10-27. Developer: Daniel Esteban Gonzalez, Argentina.</p>
+      </div>
+      <div class="panel reveal">
+        <h3>Quick message</h3>
+        <p class="small" style="margin-bottom:14px">Opens your own mail app, addressed to us. Nothing is sent or stored by this page.</p>
+        <form id="contact">
+          <label for="topic">Topic</label>
+          <select id="topic"><option>Question</option><option>Problem</option><option>Suggestion</option></select>
+          <label for="ver">App / iOS version (optional)</label>
+          <input id="ver" placeholder="e.g. 1.0 · iOS 27">
+          <label for="msg">Message</label>
+          <textarea id="msg" rows="4" required placeholder="How can we help?"></textarea>
+          <button class="btn btn-coral" type="submit" style="justify-self:start">Open in my mail app</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Daniel Esteban Gonzalez · Work Hour Tracker Work Log</span>
+    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="mailto:deg.leon.2024@gmail.com">Contact</a></span>
+    <span style="font-size:12px">Apple, Siri, Apple Intelligence, iPhone and iPad are trademarks of Apple Inc.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // nav background after scrolling
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
+  addEventListener('scroll', onScroll, {passive: true}); onScroll();
+
+  // staggered reveal on scroll (like the app's elastic entrances)
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const sibs = [...e.target.parentElement.children].filter(c => c.classList.contains('reveal'));
+      e.target.style.transitionDelay = Math.min(sibs.indexOf(e.target), 6) * 90 + 'ms';
+      e.target.classList.add('in'); io.unobserve(e.target);
+    });
+  }, {threshold: .12, rootMargin: '0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // the hero is on screen at load: play its entrance right away
+  document.querySelectorAll('.hero .reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), 120 + i * 90));
+
+  // live shift timers
+  const start = Date.now();
+  const fmt = s => `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  const timers = document.querySelectorAll('[data-timer]');
+  const tick = () => timers.forEach(t => t.textContent = fmt(+t.dataset.timer + Math.floor((Date.now() - start) / 1000)));
+  tick(); setInterval(tick, 1000);
+  const now = new Date();
+  document.getElementById('lockClock').textContent = now.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'}).replace(/\s?[AP]M/, '');
+  document.getElementById('lockDate').textContent = now.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'});
+
+  // Siri conversation plays when visible
+  const chat = document.getElementById('siriChat');
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return; o.disconnect();
+    chat.querySelectorAll('.msg').forEach((m, i) => setTimeout(() => m.classList.add('show'), reduce ? 0 : 500 + i * 1100));
+  }, {threshold: .4}).observe(chat);
+
+  // Apple Intelligence summary types itself, then the sentence becomes a shift
+  const typed = document.getElementById('typed'), parse = document.getElementById('parse');
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return; o.disconnect();
+    const text = typed.dataset.text;
+    if (reduce) { typed.textContent = text; parse.classList.add('on'); return; }
+    let i = 0; const caret = '<span class="caret"></span>';
+    const step = () => { i += 2; typed.innerHTML = text.slice(0, i) + caret; if (i < text.length) setTimeout(step, 22); else setTimeout(() => parse.classList.add('on'), 400); };
+    step();
+  }, {threshold: .4}).observe(typed);
+
+  // mailto contact form
+  document.getElementById('contact').addEventListener('submit', e => {
+    e.preventDefault();
+    const t = document.getElementById('topic').value, m = document.getElementById('msg').value, v = document.getElementById('ver').value;
+    location.href = 'mailto:deg.leon.2024@gmail.com?subject=' + encodeURIComponent('Work Hour Tracker Work Log — ' + t) + '&body=' + encodeURIComponent(m + (v ? '\n\n—\n' + v : ''));
+  });
+
+  // gentle parallax on the hero phones
+  if (!reduce) {
+    const stage = document.querySelector('.stage');
+    addEventListener('pointermove', e => {
+      const x = (e.clientX / innerWidth - .5) * 14, y = (e.clientY / innerHeight - .5) * 10;
+      stage.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    }, {passive: true});
+  }
+})();
+</script>
+</body>
+</html>
