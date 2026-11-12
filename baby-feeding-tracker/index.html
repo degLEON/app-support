@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en" data-landing="baby-feeding-tracker">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pumpwise: Baby Feeding Tracker with Siri, Apple Intelligence and a live pumping timer</title>
+<meta name="description" content="A pumping and baby feeding tracker built around Siri, Apple Intelligence and Live Activities. Start pumping by voice, switch sides from the Lock Screen and get your day in a few calm sentences. $5 once, no subscription.">
+<meta name="theme-color" content="#1e1530">
+<meta property="og:title" content="Pumpwise: Baby Feeding Tracker">
+<meta property="og:description" content="Start pumping with Siri, switch sides from the Lock Screen and let Apple Intelligence sum up your day. Private. No subscription.">
+<meta property="og:image" content="https://degleon.github.io/app-support/baby-feeding-tracker/assets/poster-1.webp">
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Pumpwise "milk cloud": deep plum night + warm peach/coral day */
+  --ink:#2b1f3d; --ink-2:#1e1530; --ink-3:#3b2b52; --frost:#fff3ea; --peach:#ffd3b8; --peach-2:#ffb894;
+  --lav:#d4c2f7; --lav-2:#b49cf0; --butter:#ffe29a;
+  --coral:#ff7a5c; --coral-2:#ff9a7c; --muted:#cdbbd8; --line:rgba(255,211,184,.16);
+  --glass:rgba(255,243,234,.07); --glass-2:rgba(255,243,234,.12);
+  --cream:#fff4ec; --cocoa:#3a2340; --cocoa-2:#6a5370; --coral-deep:#c9472c;
+  --radius:28px; --max:1180px;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ink-2);color:var(--frost);font:17px/1.6 Inter,system-ui,-apple-system,sans-serif;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:var(--peach)}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+.display{font-family:Anton,"SF Pro Display",Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:.95}
+.accent{color:var(--coral)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--lav-2)}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:620px}
+
+/* ---------- nav ---------- */
+nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(30,21,48,.74);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-color:var(--line)}
+nav .wrap{display:flex;align-items:center;gap:14px;height:68px}
+nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--frost);text-decoration:none}
+nav .brand img{width:34px;height:34px;border-radius:9px}
+nav .links{margin-left:auto;display:flex;gap:22px;align-items:center}
+nav .links a{color:var(--muted);text-decoration:none;font-size:15px;font-weight:500}
+nav .links a:hover{color:var(--frost)}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:14px 24px;font:600 16px/1 Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer;transition:transform .35s var(--spring),box-shadow .3s,background .3s}
+.btn-coral{background:var(--coral);color:#2a0f08;box-shadow:0 10px 30px -10px rgba(255,122,92,.7),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-coral:hover{transform:translateY(-2px) scale(1.03);background:var(--coral-2)}
+.btn-glass{background:var(--glass-2);color:var(--frost);border:1px solid var(--line)}
+.btn-glass:hover{transform:translateY(-2px)}
+nav .btn{padding:10px 18px;font-size:14px}
+@media (max-width:860px){nav .links a:not(.btn){display:none}}
+nav .brand,nav .btn{white-space:nowrap}
+@media (max-width:420px){nav .brand{font-size:15px}nav .brand img{width:30px;height:30px}nav .wrap{gap:8px}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:120px 0 80px;overflow:hidden;isolation:isolate}
+.hero .bg{position:absolute;inset:-8%;z-index:-2;background:url(assets/bg-night.webp) center/cover;filter:saturate(1.1) brightness(.7);animation:drift 28s ease-in-out infinite alternate}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(1000px 600px at 75% 40%,transparent,rgba(30,21,48,.55) 60%,var(--ink-2)),linear-gradient(180deg,rgba(30,21,48,.15),var(--ink-2) 96%)}
+@keyframes drift{from{transform:scale(1.05) translate3d(-1.5%,-1%,0)}to{transform:scale(1.12) translate3d(1.5%,1.5%,0)}}
+.hero .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero .grid>*{min-width:0}
+.hero h1{font-size:clamp(60px,10vw,150px)}
+.hero .app-id{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.hero .app-id img{width:64px;height:64px;border-radius:16px;box-shadow:0 12px 30px -8px rgba(0,0,0,.6)}
+.hero .app-id b{display:block;font-size:17px}
+.hero .app-id span{font-size:14px;color:var(--muted)}
+.hero .lead{margin:24px 0 32px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.hero .price{font-size:14px;color:var(--muted);margin-top:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--line);font-size:14px;font-weight:500;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.chip svg{width:16px;height:16px;color:var(--peach-2)}
+.stage{position:relative;height:640px}
+.phone{position:absolute;width:290px;border-radius:46px;padding:10px;background:linear-gradient(145deg,#5a4775,#241a36 60%,#4a3a64);box-shadow:0 50px 90px -30px rgba(0,0,0,.8),inset 0 0 0 1.5px rgba(255,211,184,.28)}
+.phone img{border-radius:37px;width:100%}
+.phone.main{left:50%;top:10px;transform:translateX(-50%) rotate(-4deg);animation:float 7s ease-in-out infinite}
+.phone.back{left:4%;top:90px;width:240px;transform:rotate(-14deg);opacity:.75;filter:blur(.4px) brightness(.8);animation:float 9s ease-in-out -3s infinite}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -14px}}
+.island{position:absolute;right:-4px;top:40px;z-index:3;display:flex;align-items:center;gap:12px;padding:10px 16px 10px 10px;border-radius:999px;background:#000;color:#fff;box-shadow:0 20px 40px -10px rgba(0,0,0,.7);font:600 15px Inter,system-ui;animation:pop 1s var(--spring) .9s both}
+.island .dot{width:30px;height:30px;border-radius:50%;background:var(--coral);display:grid;place-items:center;color:#2a0f08}
+.island .dot svg{width:16px;height:16px}
+.island .t{font-variant-numeric:tabular-nums;color:var(--coral-2);font-size:17px}
+.island small{display:block;font-size:11px;color:#b9aac4;font-weight:500;line-height:1}
+.bubble{position:absolute;left:-10px;bottom:70px;z-index:3;max-width:240px;padding:14px 16px;border-radius:20px 20px 20px 6px;background:rgba(43,31,61,.72);border:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-size:15px;animation:pop 1s var(--spring) 1.3s both}
+.bubble b{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--lav-2);margin-bottom:4px}
+.gotita{position:absolute;right:6%;bottom:6px;width:110px;z-index:3;filter:drop-shadow(0 18px 24px rgba(0,0,0,.45));animation:pop 1s var(--spring) 1.6s both}
+.gotita img{animation:float 6s ease-in-out -1s infinite}
+@keyframes pop{from{opacity:0;transform:scale(.6) translateY(20px)}to{opacity:1;transform:none}}
+@media (max-width:900px){.hero .grid{grid-template-columns:1fr}.stage{height:560px;max-width:420px;margin:0 auto;width:100%}.island{right:0}.bubble{left:0}}
+@media (max-width:420px){.phone{width:240px}.phone.back{display:none}.stage{height:500px}.gotita{width:84px;right:0}}
+
+/* ---------- marquee ---------- */
+.ticker{border-block:1px solid var(--line);background:var(--ink);overflow:hidden;padding:18px 0}
+.ticker .row{display:flex;gap:48px;width:max-content;animation:marquee 44s linear infinite}
+.ticker span{font-family:Anton,sans-serif;text-transform:uppercase;font-size:26px;color:var(--peach);white-space:nowrap;display:flex;align-items:center;gap:48px}
+.ticker span::after{content:"✦";color:var(--coral);font-size:18px}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- sections ---------- */
+section{position:relative;padding:120px 0}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.split>*{min-width:0}
+.split.rev .copy{order:2}
+@media (max-width:900px){.split{grid-template-columns:1fr;gap:44px}.split.rev .copy{order:0}section{padding:84px 0}}
+h2.display{font-size:clamp(46px,6.5vw,96px);margin:14px 0 22px}
+.list{list-style:none;padding:0;display:grid;gap:14px;margin-top:28px}
+.list li{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:20px;background:var(--glass);border:1px solid var(--line)}
+.list li svg{flex:none;width:24px;height:24px;color:var(--coral);margin-top:2px}
+.list li b{display:block}
+.list li span{color:var(--muted);font-size:15px}
+.card{position:relative;border-radius:var(--radius);background:linear-gradient(160deg,rgba(59,43,82,.92),rgba(30,21,48,.92));border:1px solid var(--line);box-shadow:0 40px 80px -40px rgba(0,0,0,.8);overflow:hidden}
+.glow{position:absolute;width:520px;height:520px;max-width:100vw;border-radius:50%;filter:blur(90px);opacity:.3;z-index:-1;pointer-events:none}
+section{isolation:isolate;overflow-x:clip}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
+
+/* Siri */
+.siri-stage{position:relative;padding:34px;min-height:540px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;background:url(assets/bg-night.webp) center/cover}
+.siri-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,21,48,.2),rgba(30,21,48,.92))}
+.siri-stage>*{position:relative}
+.orb{width:84px;height:84px;border-radius:50%;margin:0 auto 6px;background:conic-gradient(from 0deg,var(--coral),#ffc27a,var(--lav),#7fc8ff,#b06bff,var(--coral));filter:blur(.5px);animation:spin 6s linear infinite, breathe 2.4s ease-in-out infinite;box-shadow:0 0 60px rgba(255,122,92,.45)}
+@keyframes spin{to{rotate:360deg}}
+@keyframes breathe{50%{scale:1.12}}
+.msg{max-width:85%;padding:14px 18px;border-radius:22px;font-size:16px;opacity:0;transform:translateY(16px) scale(.96);transition:opacity .5s,transform .7s var(--spring)}
+.msg.show{opacity:1;transform:none}
+.msg.you{align-self:flex-end;background:var(--coral);color:#2a0f08;font-weight:600;border-bottom-right-radius:6px}
+.msg.app{align-self:flex-start;background:rgba(255,243,234,.13);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-left-radius:6px}
+.msg.app b{color:var(--peach)}
+@media (max-width:420px){.siri-stage{padding:22px 16px;min-height:500px}.msg{font-size:15px}}
+
+/* AI */
+.ai{background:radial-gradient(900px 500px at 15% 20%,rgba(212,194,247,.13),transparent),var(--ink)}
+.ai-card{padding:30px}
+@media (max-width:420px){.ai-card{padding:22px 18px}}
+.ai-card .head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;background:rgba(212,194,247,.16);border:1px solid rgba(212,194,247,.3)}
+.badge i{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#ff9a7c,#b06bff,#7fc8ff);box-shadow:0 0 10px #b06bff}
+.typed{font-size:clamp(18px,2vw,22px);line-height:1.55;min-height:8.5em}
+.typed .caret{display:inline-block;width:2px;height:1.1em;background:var(--coral);vertical-align:-3px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ai-card small{display:block;margin-top:16px;color:var(--muted);font-size:13px}
+.parse{margin-top:22px;padding:18px;border-radius:20px;background:rgba(30,21,48,.6);border:1px dashed rgba(255,211,184,.32)}
+.parse .in{font-size:15px;color:var(--muted)}
+.parse .in q{color:var(--frost);font-style:italic}
+.parse .out{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.parse .out span{padding:7px 12px;border-radius:12px;background:var(--glass-2);font-size:14px;font-weight:600;opacity:0;transform:scale(.7);transition:opacity .4s,transform .6s var(--spring)}
+.parse.on .out span{opacity:1;transform:none}
+.parse.on .out span:nth-child(2){transition-delay:.15s}.parse.on .out span:nth-child(3){transition-delay:.3s}.parse.on .out span:nth-child(4){transition-delay:.45s}.parse.on .out span:nth-child(5){transition-delay:.6s}
+
+/* Live */
+.lock{position:relative;max-width:380px;margin:0 auto;aspect-ratio:9/19.5;border-radius:54px;padding:12px;background:linear-gradient(145deg,#5a4775,#241a36 60%,#4a3a64);box-shadow:0 60px 100px -40px rgba(0,0,0,.85),inset 0 0 0 1.5px rgba(255,211,184,.28)}
+.lock .screen{position:relative;height:100%;border-radius:44px;overflow:hidden;background:url(assets/bg-day.webp) center/cover;display:flex;flex-direction:column;align-items:center;padding:20px 14px}
+.lock .screen::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,31,61,.15),rgba(43,31,61,.5))}
+.lock .screen>*{position:relative}
+.lock .di{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 6px;border-radius:999px;background:#000;color:#fff;font:600 14px Inter,system-ui;animation:widen 4s var(--spring) infinite}
+.lock .di .dot{width:28px;height:28px;border-radius:50%;background:var(--coral);display:grid;place-items:center;color:#2a0f08}
+.lock .di .dot svg{width:14px;height:14px}
+.lock .di .t{color:var(--coral-2);font-variant-numeric:tabular-nums}
+@keyframes widen{0%,100%{width:186px}50%{width:200px}}
+.lock .clock{margin-top:30px;font:700 84px/1 Inter,system-ui;letter-spacing:-.04em;color:#fff;text-shadow:0 4px 30px rgba(43,31,61,.5)}
+.lock .date{color:#fff;font-weight:600;margin-top:4px;text-shadow:0 2px 12px rgba(43,31,61,.6)}
+.lock .la{margin-top:auto;width:100%;padding:16px;border-radius:26px;background:rgba(43,31,61,.78);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff}
+.lock .la .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lock .la .name{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px}
+.lock .la .name img{width:26px;height:26px;border-radius:7px}
+.lock .la .side{font-size:13px;font-weight:600;color:var(--peach)}
+.lock .la .big{font:400 44px/1 Anton,sans-serif;color:var(--coral-2);font-variant-numeric:tabular-nums;margin-top:10px}
+.lock .la .big.paused{color:var(--muted)}
+.lock .la .acts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.lock .la button{border:0;border-radius:14px;padding:9px 4px;background:rgba(255,243,234,.14);color:#fff;font:600 12px/1.2 Inter,system-ui;cursor:pointer;transition:transform .3s var(--spring),background .2s}
+.lock .la button:hover{background:rgba(255,243,234,.24)}
+.lock .la button:active{transform:scale(.94)}
+.lock .la button.fin{background:var(--coral);color:#2a0f08}
+@media (max-width:560px){.lock{max-width:290px}.lock .clock{font-size:64px}.lock .la .big{font-size:36px}.lock .la button{font-size:11px}}
+
+/* stash */
+.stash{background:linear-gradient(180deg,var(--ink-2),var(--ink))}
+.duo-phones{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:560px;margin:0 auto}
+.duo-phones .phone{position:relative;width:100%;animation:float 8s ease-in-out infinite}
+.duo-phones .phone:nth-child(2){margin-top:60px;animation-delay:-4s}
+@media (max-width:420px){.duo-phones .phone{border-radius:30px;padding:6px}.duo-phones .phone img{border-radius:25px}}
+.bag{margin-top:26px;display:flex;gap:16px;align-items:center;padding:18px;border-radius:22px;background:var(--glass);border:1px solid var(--line)}
+.bag .vial{flex:none;position:relative;width:46px;height:84px;border-radius:12px 12px 16px 16px;background:rgba(255,243,234,.1);border:1.5px solid rgba(255,243,234,.35);overflow:hidden}
+.bag .vial i{position:absolute;inset:auto -10px 0;height:55%;background:linear-gradient(180deg,#fff7e4,#ffe2b0);border-radius:45% 55% 0 0/14px 14px 0 0;animation:slosh 3.4s ease-in-out infinite}
+@keyframes slosh{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.bag .pill{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--butter);color:#3a2a10;font-size:12px;font-weight:700;margin-bottom:6px}
+.bag b{display:block;font-size:17px}
+.bag span{font-size:14px;color:var(--muted)}
+.guides{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.guides button{border:1px solid var(--line);background:var(--glass);color:var(--frost);border-radius:999px;padding:8px 14px;font:600 14px Inter,system-ui;cursor:pointer;transition:transform .35s var(--spring),background .2s,border-color .2s}
+.guides button:hover{transform:translateY(-2px)}
+.guides button[aria-pressed="true"]{background:var(--coral);color:#2a0f08;border-color:var(--coral)}
+.guide-out{margin-top:12px;font-size:14px;color:var(--muted);min-height:1.6em}
+
+/* health */
+.health{background:radial-gradient(900px 500px at 85% 30%,rgba(255,122,92,.12),transparent),var(--ink)}
+.shot{position:relative;max-width:330px;margin:0 auto}
+.shot .phone{position:relative;width:100%;animation:float 8s ease-in-out infinite}
+.sos{margin-top:18px;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,122,92,.4);background:rgba(255,122,92,.08);font-size:14px;color:var(--frost)}
+
+/* charts demo */
+.glasses{padding:28px 24px 22px}
+.glasses .bars{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:230px;margin-top:18px}
+.glasses .g{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}
+.glasses .g em{font-style:normal;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.glasses .cup{position:relative;width:100%;max-width:44px;height:var(--h);border-radius:8px 8px 12px 12px;border:1.5px solid rgba(255,243,234,.35);background:rgba(255,243,234,.06);overflow:hidden}
+.glasses .cup i{position:absolute;left:-20%;right:-20%;bottom:0;height:0;background:linear-gradient(180deg,#fff6e6,#ffcfa6);border-radius:40% 60% 0 0/8px 8px 0 0;transition:height 1.4s var(--spring);animation:slosh 3.2s ease-in-out infinite}
+.glasses.on .cup i{height:88%}
+.glasses .g:nth-child(2) i{animation-delay:-.4s;transition-delay:.08s}.glasses .g:nth-child(3) i{animation-delay:-.8s;transition-delay:.16s}.glasses .g:nth-child(4) i{animation-delay:-1.2s;transition-delay:.24s}.glasses .g:nth-child(5) i{animation-delay:-1.6s;transition-delay:.32s}.glasses .g:nth-child(6) i{animation-delay:-2s;transition-delay:.4s}.glasses .g:nth-child(7) i{animation-delay:-2.4s;transition-delay:.48s}
+.glasses .g span{font-size:12px;color:var(--muted)}
+
+/* features */
+.features{background:linear-gradient(180deg,var(--ink),var(--ink-2))}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+@media (max-width:900px){.fgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}}
+.f{padding:26px;border-radius:24px;background:var(--glass);border:1px solid var(--line);transition:transform .5s var(--spring),background .3s,border-color .3s}
+.f:hover{transform:translateY(-6px) rotate(-.4deg);background:var(--glass-2);border-color:rgba(255,122,92,.4)}
+.f .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,122,92,.25),rgba(212,194,247,.12));color:var(--coral);margin-bottom:16px}
+.f .ic svg{width:24px;height:24px}
+.f h3{font-size:19px;margin-bottom:6px}
+.f p{color:var(--muted);font-size:15px}
+
+/* gallery */
+.gallery{overflow:hidden;padding-bottom:100px}
+.reel{display:flex;gap:22px;width:max-content;animation:marquee 60s linear infinite;padding:20px 0}
+.reel:hover{animation-play-state:paused}
+.reel img{height:520px;width:auto;border-radius:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);transition:transform .5s var(--spring)}
+.reel img:hover{transform:translateY(-10px) scale(1.02)}
+@media (max-width:560px){.reel img{height:400px}}
+.devices{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:40px;align-items:start}
+.devices img{border-radius:22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9);width:100%}
+.devices figure{position:relative}
+.devices figcaption{position:absolute;left:14px;bottom:14px;padding:6px 12px;border-radius:999px;background:rgba(30,21,48,.8);font-size:13px;font-weight:600;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+@media (max-width:760px){.devices{grid-template-columns:1fr}.devices figure{max-width:420px;margin:0 auto;width:100%}}
+
+/* privacy (day palette) */
+.privacy{text-align:center;color:var(--cocoa);background:var(--cream)}
+.privacy .bgday{position:absolute;inset:0;z-index:-1;background:url(assets/bg-day.webp) center/cover;opacity:.75}
+.privacy .bgday::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,244,236,.55),rgba(255,244,236,.85))}
+.privacy .eyebrow{color:#7a5bc4}
+.privacy .accent{color:var(--coral-deep)}
+.privacy .lead{color:var(--cocoa-2);margin:0 auto}
+.privacy .icons{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:40px}
+.privacy .icons div{width:170px;padding:22px 16px;border-radius:24px;background:rgba(255,255,255,.7);border:1px solid rgba(58,35,64,.1);box-shadow:0 20px 40px -28px rgba(58,35,64,.5)}
+.privacy .icons svg{width:30px;height:30px;color:var(--coral-deep);margin-bottom:10px}
+.privacy .icons b{display:block;font-size:15px}
+.privacy .icons span{font-size:13px;color:var(--cocoa-2)}
+@media (max-width:420px){.privacy .icons div{width:calc(50% - 7px)}}
+.price-wrap{padding-top:90px}
+.price-card{max-width:760px;margin:0 auto;padding:54px 40px;text-align:center;background:radial-gradient(600px 300px at 50% 0%,rgba(255,122,92,.25),transparent),linear-gradient(160deg,var(--ink-3),var(--ink-2))}
+@media (max-width:420px){.price-card{padding:44px 20px}}
+.price-card .amount{font-family:Anton,sans-serif;font-size:clamp(90px,14vw,150px);line-height:1;color:var(--frost)}
+.price-card .amount sup{font-size:.4em;vertical-align:.9em;color:var(--coral)}
+.price-card .once{color:var(--muted);font-size:15px;margin-top:6px}
+.price-card ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:24px 0 32px;color:var(--muted);font-size:15px}
+.price-card ul li::before{content:"✓ ";color:var(--coral);font-weight:700}
+.langs{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
+.langs span{padding:8px 16px;border-radius:999px;border:1px solid var(--line);font-weight:600}
+
+/* faq */
+details{border-bottom:1px solid var(--line);padding:20px 0}
+summary{cursor:pointer;font-size:18px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--coral);font-size:24px;line-height:1;transition:transform .4s var(--spring)}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);margin-top:10px;max-width:760px}
+
+/* support */
+.support{background:var(--ink)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+.sgrid>*{min-width:0}
+@media (max-width:900px){.sgrid{grid-template-columns:1fr}}
+.panel{padding:30px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--line)}
+@media (max-width:420px){.panel{padding:22px 18px}}
+.panel h3{font-size:20px;margin-bottom:12px}
+.doc{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.doc:last-of-type{border:0}
+.doc b{min-width:140px}
+.doc a{font-size:14px;text-decoration:none;padding:4px 10px;border-radius:999px;background:rgba(255,211,184,.1)}
+.doc a:hover{background:rgba(255,211,184,.2)}
+form{display:grid;gap:12px}
+label{font-size:13px;font-weight:600;color:var(--muted)}
+select,input,textarea{width:100%;font:16px Inter,system-ui;color:var(--frost);background:rgba(30,21,48,.7);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+select:focus,input:focus,textarea:focus{outline:2px solid var(--coral);outline-offset:1px}
+.small{font-size:13px;color:var(--muted)}
+.disclaimer{margin-top:28px;padding:18px 20px;border-radius:20px;border:1px solid var(--line);background:rgba(212,194,247,.07);font-size:14px;color:var(--muted)}
+footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+footer a{color:var(--muted)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(40px) scale(.97);transition:opacity .8s ease,transform 1s var(--spring)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.msg,.parse .out span{opacity:1;transform:none}.glasses .cup i{height:88%}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5c-.3 0-.6.15-.8.4C9.6 5 5 11 5 15a7 7 0 0 0 14 0c0-4-4.6-10-6.2-12.1a1 1 0 0 0-.8-.4Z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Zm-7 9a7 7 0 0 0 14 0M12 19v3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7L12 2Zm7 13 1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1 1-2.6Z"/></symbol>
+  <symbol id="i-live" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 8h14l-4-4M20 16H6l4 4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 2 3-2M9 20l3-2 3 2"/></symbol>
+  <symbol id="i-bottle" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10 2h4v3h-4zM9 5h6l1 3v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V8l1-3ZM8 12h8"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Zm0 16a2 2 0 0 1 2-2h13"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-grow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 20h18M5 16l5-5 4 3 6-7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 3h9l4 4v14H6zM9 11h7M9 15h7"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/></symbol>
+  <symbol id="i-export" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 20V12M10 20V6M15 20v-9M20 20V4"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Zm0 0v18M4 7.5l8 4.5 8-4.5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></symbol>
+  <symbol id="i-twins" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3 20a5 5 0 0 1 10 0M11 20a5 5 0 0 1 10 0"/></symbol>
+  <symbol id="i-widget" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h16v7H4z"/></symbol>
+  <symbol id="i-devices" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M3 5h12v14H3zM17 8h4v11h-4z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></symbol>
+  <symbol id="i-noeye" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M3 3l18 18M10.6 6.2A9.8 9.8 0 0 1 12 6c5 0 9 6 9 6a17 17 0 0 1-2.6 3.2M6.2 7.6C4.1 9.2 3 12 3 12s4 6 9 6a8.6 8.6 0 0 0 3.4-.7"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0M3 3l18 18"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M7 2h10v20H7zM11 18h2"/></symbol>
+  <symbol id="i-ad" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M3 5h18v14H3zM3 3l18 18"/></symbol>
+</svg>
+
+<nav id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/icon.webp" alt="">Pumpwise</a>
+    <div class="links">
+      <a href="#siri">Siri</a><a href="#ai">Apple Intelligence</a><a href="#live">Live</a><a href="#stash">Stash</a><a href="#health">Health</a><a href="#support">Support</a>
+      <a class="btn btn-coral" href="https://apps.apple.com/app/id6749599593">Get the app</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="bg" aria-hidden="true"></div>
+  <div class="wrap grid">
+    <div>
+      <div class="app-id reveal"><img src="assets/icon.webp" alt="Pumpwise app icon" width="64" height="64"><div><b>Pumpwise: Baby Feeding Tracker</b><span>For iPhone, iPad and iPhone Duo</span></div></div>
+      <h1 class="display reveal">Every drop,<br><span class="accent">counted.</span></h1>
+      <p class="lead reveal">A pumping and baby feeding tracker built around <b>Siri</b>, <b>Apple Intelligence</b> and <b>Live Activities</b>. Start pumping by voice, switch sides from the Lock Screen and get your day in a few calm sentences.</p>
+      <div class="ctas reveal">
+        <a class="btn btn-coral" href="https://apps.apple.com/app/id6749599593"><svg width="18" height="18"><use href="#i-play"/></svg>Get it on the App Store</a>
+        <a class="btn btn-glass" href="#siri">See how it works</a>
+      </div>
+      <p class="price reveal">$5 once. No subscription, no in-app purchases, no account, no ads.</p>
+      <div class="chips reveal">
+        <span class="chip"><svg><use href="#i-mic"/></svg>30+ Siri actions</span>
+        <span class="chip"><svg><use href="#i-spark"/></svg>Apple Intelligence</span>
+        <span class="chip"><svg><use href="#i-live"/></svg>Live Activity</span>
+        <span class="chip"><svg><use href="#i-lock"/></svg>Stays on your iPhone</span>
+      </div>
+    </div>
+    <div class="stage reveal" aria-hidden="true">
+      <div class="phone back"><img src="assets/ui-today.webp" alt="" loading="lazy"></div>
+      <div class="phone main"><img src="assets/ui-session.webp" alt=""></div>
+      <div class="island"><span class="dot"><svg><use href="#i-drop"/></svg></span><span><small>Pumping · Right</small><span class="t" data-timer="727">12:07</span></span></div>
+      <div class="bubble"><b>Siri</b>“Start pumping in Pumpwise”</div>
+      <div class="gotita"><img src="assets/gotita-star.webp" alt=""></div>
+    </div>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true"><div class="row">
+  <span>Start pumping by voice</span><span>Switch sides from the Lock Screen</span><span>Your day in words</span><span>Oldest bag first</span><span>Storage guides with sources</span><span>Your week in glasses</span><span>Night mode</span><span>Five languages</span><span>Private by design</span>
+  <span>Start pumping by voice</span><span>Switch sides from the Lock Screen</span><span>Your day in words</span><span>Oldest bag first</span><span>Storage guides with sources</span><span>Your week in glasses</span><span>Night mode</span><span>Five languages</span><span>Private by design</span>
+</div></div>
+
+<section id="siri">
+  <div class="glow" style="background:var(--coral);left:-200px;top:80px"></div>
+  <div class="wrap split">
+    <div class="copy">
+      <p class="eyebrow reveal">Siri, Shortcuts &amp; Spotlight</p>
+      <h2 class="display reveal">Just ask <span class="accent">Siri.</span></h2>
+      <p class="lead reveal">More than 30 actions work with Siri, Shortcuts and Spotlight, from logging a bottle or a diaper to storing milk, adding an appointment or exporting a PDF report. Most run without opening the app.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-drop"/></svg><div><b>“Start pumping in Pumpwise”</b><span>The timer starts and follows you to the Lock Screen.</span></div></li>
+        <li class="reveal"><svg><use href="#i-swap"/></svg><div><b>“Switch sides in Pumpwise”</b><span>Hands busy? Your voice is enough.</span></div></li>
+        <li class="reveal"><svg><use href="#i-snow"/></svg><div><b>“How much milk is in my stash in Pumpwise?”</b><span>Your stash total, out loud.</span></div></li>
+        <li class="reveal"><svg><use href="#i-bottle"/></svg><div><b>“When was the last feeding in Pumpwise?”</b><span>For the 3 a.m. question.</span></div></li>
+        <li class="reveal"><svg><use href="#i-spark"/></svg><div><b>“Summarize the last day in Pumpwise”</b><span>Your day, written for you.</span></div></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="card siri-stage" id="siriChat" aria-label="Example conversation with Siri">
+        <div class="orb"></div>
+        <div class="msg you">Start pumping in Pumpwise</div>
+        <div class="msg app">Pumping started at <b>1:46 PM</b>.</div>
+        <div class="msg you">Switch sides in Pumpwise</div>
+        <div class="msg app">Switched sides. Now: <b>right</b>.</div>
+        <div class="msg you">How much milk is in my stash in Pumpwise?</div>
+        <div class="msg app">Your stash has <b>1,508 mL</b>.</div>
+      </div>
+      <p class="note">Illustration with the sample data from the screenshots.</p>
+    </div>
+  </div>
+</section>
+
+<section class="ai" id="ai">
+  <div class="wrap split rev">
+    <div class="copy">
+      <p class="eyebrow reveal">Apple Intelligence, when you want it</p>
+      <h2 class="display reveal">Your day<br><span class="accent">in words.</span></h2>
+      <p class="lead reveal">Apple Intelligence runs on your device or with Private Cloud Compute. It only uses what you logged, and each result says who wrote it.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-note"/></svg><div><b>Log with a sentence</b><span>“pumped 90 left and 70 right at 3” becomes an entry you check before saving.</span></div></li>
+        <li class="reveal"><svg><use href="#i-spark"/></svg><div><b>Summary and handoff note</b><span>Your day in plain words, or a short note for whoever takes over.</span></div></li>
+        <li class="reveal"><svg><use href="#i-book"/></svg><div><b>Today's tip</b><span>Picked from Pumpwise's own guides, always with its source.</span></div></li>
+        <li class="reveal"><svg><use href="#i-cal"/></svg><div><b>Prepare the visit</b><span>Your entries since the last appointment, plus your own questions.</span></div></li>
+        <li class="reveal"><svg><use href="#i-mic"/></svg><div><b>Ask your log</b><span>“How much did she drink last night?”</span></div></li>
+      </ul>
+      <p class="small reveal" style="margin-top:18px">It is optional: turn it off and every feature still works with Pumpwise's own calculation.</p>
+    </div>
+    <div class="reveal">
+      <div class="card ai-card">
+        <div class="head"><span class="eyebrow">Summary · last 24 hours</span><span class="badge"><i></i>Apple Intelligence</span></div>
+        <p class="typed" id="typed" data-text="8 feeds: 6 breastfeeds and 2 bottles. 861 mL was pumped in 6 sessions, 407 mL on the left side and 454 mL on the right. There were 7 diapers, sleep lasted 11h 34m, and the longest time between feeds was 3h 32m."></p>
+        <small>Illustration based on the sample summary in the screenshots.</small>
+        <div class="parse" id="parse">
+          <div class="in">You type: <q>pumped 90 left and 70 right at 3</q></div>
+          <div class="out"><span>💧 Pumping</span><span>Left 90 mL</span><span>Right 70 mL</span><span>🕒 3:00 PM</span><span>✓ Check, then save</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="live" id="live">
+  <div class="glow" style="background:var(--lav-2);right:-220px;top:120px;opacity:.2"></div>
+  <div class="wrap split">
+    <div class="copy">
+      <p class="eyebrow reveal">Live Activity, widgets &amp; controls</p>
+      <h2 class="display reveal">Your session,<br><span class="accent">live.</span></h2>
+      <p class="lead reveal">Pumping, breastfeeding and sleep run as a Live Activity on the Lock Screen and in the Dynamic Island, with Switch side, Pause and Finish right there.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-live"/></svg><div><b>Lock Screen and Dynamic Island</b><span>The timer keeps running while your phone stays locked.</span></div></li>
+        <li class="reveal"><svg><use href="#i-widget"/></svg><div><b>Widgets</b><span>The last feed, your stash and what's next.</span></div></li>
+        <li class="reveal"><svg><use href="#i-drop"/></svg><div><b>Controls</b><span>Start pumping or log a diaper in one tap.</span></div></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="lock" id="lock">
+        <div class="screen">
+          <div class="di" aria-hidden="true"><span class="dot"><svg><use href="#i-drop"/></svg></span><span>Pumping</span><span class="t" data-timer="727" style="margin-left:auto">12:07</span></div>
+          <div class="clock" id="lockClock" aria-hidden="true">9:41</div>
+          <div class="date" id="lockDate" aria-hidden="true">Thursday, November 12</div>
+          <div class="la">
+            <div class="row"><span class="name"><img src="assets/icon.webp" alt="">Pumping · Emma</span><span class="side" id="laSide">Right side</span></div>
+            <div class="big" data-timer="727" id="laTimer">12:07</div>
+            <div class="acts">
+              <button type="button" id="laSwitch">⇄ Switch side</button>
+              <button type="button" id="laPause">❙❙ Pause</button>
+              <button type="button" class="fin" id="laFinish">✓ Finish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Illustration of the Live Activity. Try the buttons.</p>
+    </div>
+  </div>
+</section>
+
+<section class="stash" id="stash">
+  <div class="glow" style="background:var(--peach-2);left:-240px;bottom:40px;opacity:.16"></div>
+  <div class="wrap split rev">
+    <div class="copy">
+      <p class="eyebrow reveal">Pumping, stash &amp; feeds</p>
+      <h2 class="display reveal">Oldest bag <span class="accent">first.</span></h2>
+      <p class="lead reveal">A timer for left, right or both, and a liquid amount picker in mL or oz that tilts with your phone. Then store the milk.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-snow"/></svg><div><b>Fridge, freezer or deep freezer</b><span>Each bag timed by the storage guide you choose. Thaw, use part of a bag, undo.</span></div></li>
+        <li class="reveal"><svg><use href="#i-cube"/></svg><div><b>Your stash in a 3D freezer</b><span>Shelf by shelf, with the bag to use first always at the front. An optional goal and days of stash at your current pace.</span></div></li>
+        <li class="reveal"><svg><use href="#i-bottle"/></svg><div><b>Every feed</b><span>Breastfeeding with the last side in view, bottles taken from the bag to use first, formula, diapers and sleep.</span></div></li>
+      </ul>
+      <div class="bag reveal" aria-label="Example stash bag">
+        <div class="vial"><i></i></div>
+        <div><span class="pill">↗ Use first</span><b>100 mL · Fridge</b><span>Expressed Nov 5 · Your guide's time: until Nov 9</span></div>
+      </div>
+      <p class="small reveal" style="margin-top:8px">Illustration from the sample data.</p>
+      <p class="eyebrow reveal" style="margin-top:34px">Storage guides with their sources</p>
+      <div class="guides reveal" id="guides" role="group" aria-label="Storage guides">
+        <button type="button" aria-pressed="true" data-g="CDC (United States)">CDC</button>
+        <button type="button" aria-pressed="false" data-g="NHS (United Kingdom)">NHS</button>
+        <button type="button" aria-pressed="false" data-g="Academy of Breastfeeding Medicine">ABM</button>
+        <button type="button" aria-pressed="false" data-g="Germany's National Breastfeeding Committee">Germany</button>
+        <button type="button" aria-pressed="false" data-g="KDCA (Korea)">KDCA</button>
+        <button type="button" aria-pressed="false" data-g="Spain's Ministry of Health">Spain</button>
+        <button type="button" aria-pressed="false" data-g="Argentina's Ministry of Health">Argentina</button>
+      </div>
+      <p class="guide-out reveal" id="guideOut" aria-live="polite">Your bags follow: <b>CDC (United States)</b>, with its own times and conditions.</p>
+      <p class="small reveal">Compare the guides side by side; Pumpwise tells you when a bag passes your guide's time. Plus pump care, paced bottle feeding, hunger cues and tips, each with its source.</p>
+    </div>
+    <div class="duo-phones reveal" aria-hidden="true">
+      <div class="phone"><img src="assets/ui-stash.webp" alt="" loading="lazy"></div>
+      <div class="phone"><img src="assets/ui-freezer-3d.webp" alt="" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<section class="health" id="health">
+  <div class="wrap split">
+    <div class="copy">
+      <p class="eyebrow reveal">Health &amp; reports</p>
+      <h2 class="display reveal">Ready for every <span class="accent">checkup.</span></h2>
+      <p class="lead reveal">Everything your pediatrician may ask about, in one place, and one tap away from a PDF.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-grow"/></svg><div><b>Growth</b><span>Weight, length and head circumference as your baby's own curve.</span></div></li>
+        <li class="reveal"><svg><use href="#i-shield"/></svg><div><b>Vaccines</b><span>What was given, with links to your country's official schedule.</span></div></li>
+        <li class="reveal"><svg><use href="#i-cal"/></svg><div><b>Pediatrician appointments</b><span>With the questions you want to bring.</span></div></li>
+        <li class="reveal"><svg><use href="#i-note"/></svg><div><b>Health notes and firsts</b><span>A note for a fever, and a diary of first moments.</span></div></li>
+        <li class="reveal"><svg><use href="#i-export"/></svg><div><b>PDF report or CSV files</b><span>Share it all with whoever needs it.</span></div></li>
+      </ul>
+      <p class="sos reveal">Pumpwise is a record-keeping tool. It does not diagnose or give medical or lactation advice. In an emergency, call your local emergency number or your pediatrician.</p>
+    </div>
+    <div class="shot reveal" aria-hidden="true">
+      <div class="phone"><img src="assets/ui-health.webp" alt="" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<section id="charts">
+  <div class="glow" style="background:var(--coral);right:-240px;top:60px;opacity:.16"></div>
+  <div class="wrap split rev">
+    <div class="copy">
+      <p class="eyebrow reveal">Charts &amp; 3D</p>
+      <h2 class="display reveal">Your week<br><span class="accent">in glasses.</span></h2>
+      <p class="lead reveal">Milk per day, each side, your 24-hour rhythm, time between feeds, sleep, diapers and stash, with liquid bars that sway as you tilt the phone.</p>
+      <ul class="list">
+        <li class="reveal"><svg><use href="#i-cube"/></svg><div><b>3D glasses of milk</b><span>Pumped and drunk, day by day, in glasses you can turn.</span></div></li>
+        <li class="reveal"><svg><use href="#i-chart"/></svg><div><b>Show as a table</b><span>Every chart has its numbers written out.</span></div></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="card glasses" id="glasses" aria-label="Example chart: milk pumped per day this week">
+        <div class="head" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span class="eyebrow">Pumped this week</span><span class="small">mL per day</span></div>
+        <div class="bars">
+          <div class="g"><em>1,214</em><div class="cup" style="--h:90%"><i></i></div><span>Mon</span></div>
+          <div class="g"><em>1,039</em><div class="cup" style="--h:77%"><i></i></div><span>Tue</span></div>
+          <div class="g"><em>1,347</em><div class="cup" style="--h:100%"><i></i></div><span>Wed</span></div>
+          <div class="g"><em>1,176</em><div class="cup" style="--h:87%"><i></i></div><span>Thu</span></div>
+          <div class="g"><em>1,309</em><div class="cup" style="--h:97%"><i></i></div><span>Fri</span></div>
+          <div class="g"><em>1,078</em><div class="cup" style="--h:80%"><i></i></div><span>Sat</span></div>
+          <div class="g"><em>495</em><div class="cup" style="--h:37%"><i></i></div><span>Sun</span></div>
+        </div>
+      </div>
+      <p class="note">Illustration with the sample week from the screenshots.</p>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <p class="eyebrow reveal">For night feeds and every screen</p>
+    <h2 class="display reveal">Made for the<br><span class="accent">small hours.</span></h2>
+    <div class="fgrid">
+      <div class="f reveal"><div class="ic"><svg><use href="#i-moon"/></svg></div><h3>Night mode</h3><p>Darker, warmer colors and bigger buttons for night feeds.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-devices"/></svg></div><h3>iPhone, iPad &amp; Duo</h3><p>Designed for iPhone, iPad and both screens of iPhone Duo.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-twins"/></svg></div><h3>Twins welcome</h3><p>Track more than one baby, each with their own log.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-widget"/></svg></div><h3>Widgets &amp; controls</h3><p>The last feed, your stash and what's next, without opening the app.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-export"/></svg></div><h3>PDF &amp; CSV</h3><p>Share a report with your pediatrician or keep your own copy.</p></div>
+      <div class="f reveal"><div class="ic"><svg><use href="#i-globe"/></svg></div><h3>Five languages</h3><p>English, Spanish, Japanese, German and Korean.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" aria-label="App Store screenshots">
+  <div class="wrap">
+    <p class="eyebrow reveal">Take a look</p>
+    <h2 class="display reveal">On every <span class="accent">screen.</span></h2>
+  </div>
+  <div class="reel">
+    <img src="assets/poster-1.webp" alt="Every drop, counted: pumping timer" loading="lazy"><img src="assets/poster-2.webp" alt="Just ask Siri" loading="lazy"><img src="assets/poster-3.webp" alt="Your day in words: Apple Intelligence summary" loading="lazy"><img src="assets/poster-4.webp" alt="Oldest bag first: 3D freezer" loading="lazy"><img src="assets/poster-5.webp" alt="Your week in glasses: charts" loading="lazy"><img src="assets/poster-6.webp" alt="Ready for every checkup: growth and health" loading="lazy">
+    <img src="assets/poster-1.webp" alt="" loading="lazy"><img src="assets/poster-2.webp" alt="" loading="lazy"><img src="assets/poster-3.webp" alt="" loading="lazy"><img src="assets/poster-4.webp" alt="" loading="lazy"><img src="assets/poster-5.webp" alt="" loading="lazy"><img src="assets/poster-6.webp" alt="" loading="lazy">
+  </div>
+  <div class="wrap devices">
+    <figure class="reveal"><img src="assets/poster-ipad-3.webp" alt="Pumpwise on iPad: your day in words" loading="lazy"><figcaption>iPad</figcaption></figure>
+    <figure class="reveal"><img src="assets/ui-ipad-freezer-3d.webp" alt="Pumpwise on iPad: the stash shelf by shelf" loading="lazy"><figcaption>iPad · day colors</figcaption></figure>
+    <figure class="reveal"><img src="assets/ui-duo-outer.webp" alt="Pumpwise on the iPhone Duo outer screen" loading="lazy"><figcaption>iPhone Duo</figcaption></figure>
+  </div>
+</section>
+
+<section class="privacy">
+  <div class="bgday" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow reveal">Private by design</p>
+    <h2 class="display reveal">Your log stays <span class="accent">yours.</span></h2>
+    <p class="lead reveal">Your records stay on your iPhone. No account, analytics, ads or tracking. Optional Apple Intelligence requests may be processed by Apple to answer them; see the privacy policy.</p>
+    <div class="icons">
+      <div class="reveal"><svg><use href="#i-user"/></svg><b>No account</b><span>Open it and start</span></div>
+      <div class="reveal"><svg><use href="#i-phone"/></svg><b>On your device</b><span>No servers of ours</span></div>
+      <div class="reveal"><svg><use href="#i-noeye"/></svg><b>No tracking</b><span>No analytics</span></div>
+      <div class="reveal"><svg><use href="#i-ad"/></svg><b>No ads</b><span>Ever</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="price-wrap" style="padding-bottom:40px">
+  <div class="wrap">
+    <div class="card price-card reveal">
+      <p class="eyebrow">One price. Yours to keep.</p>
+      <div class="amount"><sup>$</sup>5</div>
+      <p class="once">USD, paid once</p>
+      <ul><li>Every feature</li><li>No subscription</li><li>No in-app purchases</li><li>iPhone, iPad &amp; iPhone Duo</li></ul>
+      <a class="btn btn-coral" href="https://apps.apple.com/app/id6749599593"><svg width="18" height="18"><use href="#i-play"/></svg>Get it on the App Store</a>
+      <div class="langs"><span>English</span><span>Español</span><span>日本語</span><span>Deutsch</span><span>한국어</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <p class="eyebrow reveal">Questions</p>
+    <h2 class="display reveal">Good to <span class="accent">know.</span></h2>
+    <div class="reveal">
+      <details><summary>Do I need Apple Intelligence?</summary><p>No. Logging with a sentence, summaries, handoff notes, today's tip, preparing the visit and asking your log use Apple Intelligence when it is available and turned on. Turn it off and every feature still works with Pumpwise's own calculation. Each result says who wrote it.</p></details>
+      <details><summary>Which Siri phrases can I use?</summary><p>For example “Start pumping in Pumpwise”, “Switch sides in Pumpwise”, “How much milk is in my stash in Pumpwise?”, “When was the last feeding in Pumpwise?” and “Summarize the last day in Pumpwise”. More than 30 actions also appear in the Shortcuts app and Spotlight.</p></details>
+      <details><summary>Where do the storage times come from?</summary><p>From the guide you choose: the CDC, NHS, ABM, Germany's National Breastfeeding Committee, KDCA, Spain's Ministry of Health or Argentina's Ministry of Health. Each keeps its own times and conditions, with its source. Use-by labels are reminders based on that guide, not a guarantee about the milk.</p></details>
+      <details><summary>Is this medical advice?</summary><p>No. Pumpwise is a record-keeping tool. It does not diagnose or give medical or lactation advice; storage times come from the sources cited. Talk to your pediatrician about your baby's health.</p></details>
+      <details><summary>Where is my data stored?</summary><p>On your device. There is no account and no server of ours. You can share your log as a PDF report or CSV files whenever you want.</p></details>
+      <details><summary>Is it a subscription?</summary><p>No. You pay once and get every feature, with no in-app purchases.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <div class="wrap">
+    <p class="eyebrow reveal">Support</p>
+    <h2 class="display reveal">We're here to <span class="accent">help.</span></h2>
+    <p class="lead reveal">Questions, problems or ideas: write to <a href="mailto:deg.leon.2024@gmail.com">deg.leon.2024@gmail.com</a>. Please include the app version and your device, and avoid sending sensitive personal or health information.</p>
+    <div class="sgrid">
+      <div class="panel reveal">
+        <h3>Documents</h3>
+        <div class="doc"><b>Privacy Policy</b><a href="privacy.html" lang="en">English</a><a href="privacy.es.html" lang="es">Español</a><a href="privacy.ja.html" lang="ja">日本語</a><a href="privacy.de.html" lang="de">Deutsch</a><a href="privacy.ko.html" lang="ko">한국어</a></div>
+        <div class="doc"><b>Terms of Use</b><a href="terms.html" lang="en">English</a><a href="terms.es.html" lang="es">Español</a><a href="terms.ja.html" lang="ja">日本語</a><a href="terms.de.html" lang="de">Deutsch</a><a href="terms.ko.html" lang="ko">한국어</a></div>
+        <div class="doc"><b>License (EULA)</b><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Apple Standard EULA</a></div>
+        <p class="small" style="margin-top:14px">Effective 2026-11-05. Developer: Daniel Esteban Gonzalez, Argentina.</p>
+      </div>
+      <div class="panel reveal">
+        <h3>Quick message</h3>
+        <p class="small" style="margin-bottom:14px">Opens your own mail app, addressed to us. Nothing is sent or stored by this page.</p>
+        <form id="contact">
+          <label for="topic">Topic</label>
+          <select id="topic"><option>Question</option><option>Problem</option><option>Suggestion</option></select>
+          <label for="ver">App / iOS version (optional)</label>
+          <input id="ver" placeholder="e.g. 1.0 · iOS 27">
+          <label for="msg">Message</label>
+          <textarea id="msg" rows="4" required placeholder="How can we help?"></textarea>
+          <button class="btn btn-coral" type="submit" style="justify-self:start">Open in my mail app</button>
+        </form>
+      </div>
+    </div>
+    <p class="disclaimer reveal">Pumpwise is a record-keeping tool. It does not diagnose or give medical or lactation advice; storage times come from the sources cited. Talk to your pediatrician about your baby's health.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Daniel Esteban Gonzalez · Pumpwise: Baby Feeding Tracker</span>
+    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="mailto:deg.leon.2024@gmail.com">Contact</a></span>
+    <span style="font-size:12px">Apple, Siri, Apple Intelligence, iPhone and iPad are trademarks of Apple Inc.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // nav background after scrolling
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
+  addEventListener('scroll', onScroll, {passive: true}); onScroll();
+
+  // staggered reveal on scroll (like the app's elastic entrances)
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const sibs = [...e.target.parentElement.children].filter(c => c.classList.contains('reveal'));
+      e.target.style.transitionDelay = Math.min(sibs.indexOf(e.target), 6) * 90 + 'ms';
+      e.target.classList.add('in'); io.unobserve(e.target);
+    });
+  }, {threshold: .12, rootMargin: '0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // the hero is on screen at load: play its entrance right away
+  document.querySelectorAll('.hero .reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), 120 + i * 90));
+
+  // live pumping timers (mm:ss under an hour, like the app)
+  const fmt = s => s >= 3600
+    ? `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
+    : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  const timers = document.querySelectorAll('[data-timer]');
+  let elapsed = 0, paused = false, last = Date.now();
+  const tick = () => {
+    const now = Date.now();
+    if (!paused) elapsed += now - last;
+    last = now;
+    timers.forEach(t => t.textContent = fmt(+t.dataset.timer + Math.floor(elapsed / 1000)));
+  };
+  tick(); setInterval(tick, 1000);
+  const now = new Date();
+  document.getElementById('lockClock').textContent = now.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'}).replace(/\s?[AP]M/, '');
+  document.getElementById('lockDate').textContent = now.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'});
+
+  // Live Activity demo buttons
+  const side = document.getElementById('laSide'), pauseBtn = document.getElementById('laPause'), big = document.getElementById('laTimer');
+  document.getElementById('laSwitch').addEventListener('click', () => {
+    side.textContent = side.textContent.startsWith('Right') ? 'Left side' : 'Right side';
+  });
+  pauseBtn.addEventListener('click', () => {
+    paused = !paused; tick();
+    pauseBtn.textContent = paused ? '▶ Resume' : '❙❙ Pause';
+    big.classList.toggle('paused', paused);
+  });
+  document.getElementById('laFinish').addEventListener('click', () => {
+    elapsed = 0; paused = false; tick();
+    pauseBtn.textContent = '❙❙ Pause'; big.classList.remove('paused');
+    side.textContent = 'Saved · new session';
+    setTimeout(() => side.textContent = 'Right side', 1800);
+  });
+
+  // Siri conversation plays when visible
+  const chat = document.getElementById('siriChat');
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return; o.disconnect();
+    chat.querySelectorAll('.msg').forEach((m, i) => setTimeout(() => m.classList.add('show'), reduce ? 0 : 500 + i * 1000));
+  }, {threshold: .4}).observe(chat);
+
+  // Apple Intelligence summary types itself, then the sentence becomes an entry
+  const typed = document.getElementById('typed'), parse = document.getElementById('parse');
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return; o.disconnect();
+    const text = typed.dataset.text;
+    if (reduce) { typed.textContent = text; parse.classList.add('on'); return; }
+    let i = 0; const caret = '<span class="caret"></span>';
+    const step = () => { i += 2; typed.innerHTML = text.slice(0, i) + caret; if (i < text.length) setTimeout(step, 22); else setTimeout(() => parse.classList.add('on'), 400); };
+    step();
+  }, {threshold: .4}).observe(typed);
+
+  // liquid glasses fill when visible
+  const glasses = document.getElementById('glasses');
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return; o.disconnect(); glasses.classList.add('on');
+  }, {threshold: .3}).observe(glasses);
+
+  // storage guide picker
+  const out = document.getElementById('guideOut');
+  document.querySelectorAll('#guides button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#guides button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    out.innerHTML = 'Your bags follow: <b>' + b.dataset.g + '</b>, with its own times and conditions.';
+  }));
+
+  // mailto contact form
+  document.getElementById('contact').addEventListener('submit', e => {
+    e.preventDefault();
+    const t = document.getElementById('topic').value, m = document.getElementById('msg').value, v = document.getElementById('ver').value;
+    location.href = 'mailto:deg.leon.2024@gmail.com?subject=' + encodeURIComponent('Pumpwise — ' + t) + '&body=' + encodeURIComponent(m + (v ? '\n\n—\n' + v : ''));
+  });
+
+  // gentle parallax on the hero phones
+  if (!reduce) {
+    const stage = document.querySelector('.stage');
+    addEventListener('pointermove', e => {
+      const x = (e.clientX / innerWidth - .5) * 14, y = (e.clientY / innerHeight - .5) * 10;
+      stage.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    }, {passive: true});
+  }
+})();
+</script>
+</body>
+</html>
